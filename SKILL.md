@@ -51,4 +51,16 @@ Determine which of the following categories the request falls into and follow th
    - If you are unable, ask the user to do it.
 5. **SSH & Host Discovery:**
    - If the CLI lacks a feature or app-level logs are insufficient, use SSH to the host server found in `coolify context list` or `coolify server list`.
+
+## ⚠️ Known CLI Limitations
+
+The Coolify CLI (as of v1.4.0) does not support every API operation. When you encounter a missing command:
+
+1. **Do NOT silently fall back to raw API calls (`curl`, etc.).**
+2. **Inform the user** that the CLI lacks support for this specific action.
+3. **Ask for permission** before attempting an alternative (e.g., direct API call, or manual action via the Coolify web UI).
+
+Examples of currently unsupported CLI operations:
+- `coolify project delete` (projects can only be deleted via the web UI or API)
+- Non-interactive deletion of databases (no `--force` flag)
   
