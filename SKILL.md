@@ -14,10 +14,12 @@ Determine which of the following categories the request falls into and follow th
 
 ### A. "Fix it" / "Debug it" (Operations)
 *User asks: "Why did the build fail?", "Show me logs", "Restart the service"*
-1. **Check Status:** Run `coolify app get <uuid>` to see if it's running or exited.
-2. **Get Logs:** - If build failed: `coolify app deployments logs <app_uuid>` (Add `--debuglogs` if unclear).
+1. **Check Broad Health:** - Run `coolify resources list` to see if dependencies (DBs, Redis) are healthy.
+   - If multiple resources are `unhealthy` or `exited`, check the host server disk space immediately (`ssh ... "df -h"`).
+2. **Check Status:** Run `coolify app get <uuid>` to see if it's running or exited.
+3. **Get Logs:** - If build failed: `coolify app deployments logs <app_uuid>`.
    - If runtime error: `coolify app logs <uuid>`.
-3. **Action:** If stuck, `coolify app restart <uuid>`.
+4. **Action:** If stuck, `coolify app restart <uuid>`.
 
 ### B. "Change it" (Configuration)
 *User asks: "Update environment variables", "Change the domain", "Add a database"*
@@ -43,3 +45,10 @@ Determine which of the following categories the request falls into and follow th
 
 3. **Handling "Impossible" Actions:**
    - If the CLI lacks a feature (like direct file upload or shell access), refer to the **SSH Tunneling** protocol in `resources/common-workflows.md` or use the script in `scripts/`.
+
+4. **Handle Permissions & Scripts:**
+   - If a required script (like `container-exec.sh`) exists but fails with `Permission denied` (code 126), automatically run `chmod +x <path>` and retry.
+   - If you are unable, ask the user to do it.
+5. **SSH & Host Discovery:**
+   - If the CLI lacks a feature or app-level logs are insufficient, use SSH to the host server found in `coolify context list` or `coolify server list`.
+  
